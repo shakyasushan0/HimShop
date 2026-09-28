@@ -1,5 +1,6 @@
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
+import { NavLink } from "react-router";
 import logo from "../assets/react.svg";
 
 function Header() {
@@ -7,17 +8,17 @@ function Header() {
     <header>
       <Navbar bg="dark" variant="dark" collapseOnSelect expand="md">
         <Container>
-          <Navbar.Brand>
+          <Navbar.Brand as={NavLink} to="/">
             <img src={logo} alt="logo" />
             HimalayanShop
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbar" />
           <Navbar.Collapse id="navbar">
             <Nav className="ms-auto">
-              <Nav.Link>
+              <Nav.Link as={NavLink} to="/cart">
                 <FaShoppingCart /> Cart
               </Nav.Link>
-              <Nav.Link>
+              <Nav.Link as={NavLink} to="/login">
                 <FaUser /> Login
               </Nav.Link>
             </Nav>
