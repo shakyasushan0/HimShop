@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router";
-import { Row, Col, Image, ListGroup, Button } from "react-bootstrap";
+import { Row, Col, Image, ListGroup, Button, Form } from "react-bootstrap";
 import Rating from "../components/Ratings";
 
 function ProductDetailPage() {
@@ -61,6 +61,20 @@ function ProductDetailPage() {
                 </Col>
               </Row>
             </ListGroup.Item>
+            {product.countInStock != 0 && (
+              <ListGroup.Item>
+                <Row>
+                  <Col>Qty:</Col>
+                  <Col>
+                    <Form.Select>
+                      {[...Array(product.countInStock).keys()].map((x) => (
+                        <option key={x + 1}>{x + 1}</option>
+                      ))}
+                    </Form.Select>
+                  </Col>
+                </Row>
+              </ListGroup.Item>
+            )}
             <ListGroup.Item>
               <Button variant="dark">Add to Cart</Button>
             </ListGroup.Item>
