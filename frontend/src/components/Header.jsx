@@ -1,4 +1,4 @@
-import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
+import { Navbar, Nav, Container, NavDropdown, Badge } from "react-bootstrap";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { NavLink, useNavigate } from "react-router";
@@ -7,6 +7,7 @@ import { removeCredentials } from "../slices/authSlice";
 import axios from 'axios'
 
 function Header() {
+  const {cartItems} = useSelector(state => state.cart)
   const {userInfo} = useSelector(state => state.auth)
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ function Header() {
           <Navbar.Collapse id="navbar">
             <Nav className="ms-auto">
               <Nav.Link as={NavLink} to="/cart">
-                <FaShoppingCart /> Cart
+                <FaShoppingCart /> Cart {" "} {cartItems.length > 0 && <Badge bg="success" pill>{cartItems.reduce((acc,item) => acc + Number(item.qty),0)}</Badge>}
               </Nav.Link>
               {
                 userInfo ? (<>

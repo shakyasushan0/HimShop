@@ -12,14 +12,32 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const item = action.payload;
-      state.cartItems.push(item);
+      const itemId = item._id;
+      const itemFound = state.cartItems.find((i) => i._id == itemId);
+      if (itemFound) {
+        itemFound.qty = item.qty;
+      } else {
+        state.cartItems.push(item);
+      }
+
+      state.itemPrice = Number(
+        state.cartItems.reduce((acc, x) => acc + x.qty * x.price, 0).toFixed(2),
+      );
+      state.shippingCharge = state.itemPrice >= 100 ? 0 : 10;
+      state.taxPrice = Number((0.1 * state.itemPrice).toFixed(2));
+      state.totalPrice =
+        state.itemPrice + state.shippingCharge + state.taxPrice;
     },
     clearCart: (state, action) => {
       state.cartItems = [];
     },
-    removeItem: (state, action) => {},
+    removeFromCart: (state, action) => {
+      const id = action.payload;
+      state.cartItems = state.cartItems.filter((item) => item._id != id);
+      updateCart(state);
+    },
   },
 });
 
-export const { addToCart, clearCart, removeItem } = cartSlice.actions;
+export const { addToCart, clearCart, removeFromCart } = cartSlice.actions;
 export default cartSlice.reducer;

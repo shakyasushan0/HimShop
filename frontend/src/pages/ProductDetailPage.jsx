@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router";
 import { Row, Col, Image, ListGroup, Button, Form } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import Rating from "../components/Ratings";
+import { addToCart } from "../slices/cartSlice";
 
 function ProductDetailPage() {
+  const [qty, setQty] = useState(1);
   const { id } = useParams();
+  const dispatch = useDispatch();
   const [product, setProduct] = useState({});
 
   const fetchProductById = async () => {
@@ -66,7 +70,7 @@ function ProductDetailPage() {
                 <Row>
                   <Col>Qty:</Col>
                   <Col>
-                    <Form.Select>
+                    <Form.Select onChange={(e) => setQty(e.target.value)}>
                       {[...Array(product.countInStock).keys()].map((x) => (
                         <option key={x + 1}>{x + 1}</option>
                       ))}
@@ -76,7 +80,12 @@ function ProductDetailPage() {
               </ListGroup.Item>
             )}
             <ListGroup.Item>
-              <Button variant="dark">Add to Cart</Button>
+              <Button
+                variant="dark"
+                onClick={() => dispatch(addToCart({ ...product, qty }))}
+              >
+                Add to Cart
+              </Button>
             </ListGroup.Item>
           </ListGroup>
         </Col>
