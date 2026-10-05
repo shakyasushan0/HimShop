@@ -1,9 +1,26 @@
-import { Navbar, Nav, Container } from "react-bootstrap";
+import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
-import { NavLink } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
+import { NavLink, useNavigate } from "react-router";
 import logo from "../assets/react.svg";
+import { removeCredentials } from "../slices/authSlice";
+import axios from 'axios'
 
 function Header() {
+  const {userInfo} = useSelector(state => state.auth)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const logoutHandler = async () => {
+    try{
+      const resp = await axios.post("/api/auth/logout");
+      dispatch(removeCredentials())
+      navigate("/login")
+      console.log(resp.data)
+    }
+    catch(err){
+      console.log(err.message)
+    }
+  }
   return (
     <header>
       <Navbar bg="dark" variant="dark" collapseOnSelect expand="md">
@@ -18,9 +35,16 @@ function Header() {
               <Nav.Link as={NavLink} to="/cart">
                 <FaShoppingCart /> Cart
               </Nav.Link>
-              <Nav.Link as={NavLink} to="/login">
+              {
+                userInfo ? (<>
+                <NavDropdown title={userInfo.fullname}>
+                  <NavDropdown.Item>Profile</NavDropdown.Item>
+                  <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
+                </NavDropdown>
+                </>) : (<Nav.Link as={NavLink} to="/login">
                 <FaUser /> Login
-              </Nav.Link>
+              </Nav.Link>)
+              }
             </Nav>
           </Navbar.Collapse>
         </Container>

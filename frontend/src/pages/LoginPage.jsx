@@ -1,15 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
+import FormContainer from "../components/FormContainer";
+import { setCredentials } from "../slices/authSlice";
+import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import axios from 'axios'
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const handleSubmit = (e) => {
+  const {userInfo} = useSelector(state => state.auth)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  useEffect(() => {
+    if(userInfo){
+      navigate("/")
+    }
+  }, [userInfo, navigate])
+  const handleSubmit =  async (e) => {
     e.preventDefault();
-    console.log(email, password);
+   try {
+    //  const resp = await fetch("/api/auth/login", {
+    //   method: 'POST',
+    //   headers: {'Content-Type': 'application/json'},
+    //   body: JSON.stringify({email, password})
+    // })
+    // const data = await resp.json()
+    // console.log(data)
+    const resp = await axios.post("/api/auth/login", {email, password})
+    dispatch(setCredentials(resp.data.user))
+   }
+   catch(err){
+    console.log(err)
+   }
   };
   return (
-    <>
+    <FormContainer>
       <h2>Login</h2>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="my-2">
@@ -32,7 +58,7 @@ function LoginPage() {
           Login
         </Button>
       </Form>
-    </>
+    </FormContainer>
   );
 }
 

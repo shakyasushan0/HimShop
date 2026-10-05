@@ -8,9 +8,12 @@ import HomePage from "./pages/HomePage.jsx";
 import ProductDetailPage from "./pages/ProductDetailPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import CartPage from "./pages/CartPage.jsx";
+import {Provider} from 'react-redux'
+import store from "./store.js";
 
 createRoot(document.getElementById("root")).render(
-  <BrowserRouter>
+  <Provider store={store}>
+     <BrowserRouter>
     <Routes>
       <Route path="/" Component={App}>
         <Route path="" Component={HomePage} />
@@ -19,5 +22,6 @@ createRoot(document.getElementById("root")).render(
         <Route path="cart" Component={CartPage} />
       </Route>
     </Routes>
-  </BrowserRouter>,
+  </BrowserRouter>
+  </Provider>
 );
