@@ -8,20 +8,27 @@ import HomePage from "./pages/HomePage.jsx";
 import ProductDetailPage from "./pages/ProductDetailPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import CartPage from "./pages/CartPage.jsx";
-import {Provider} from 'react-redux'
+import { Provider } from "react-redux";
 import store from "./store.js";
+import ShippingPage from "./pages/ShippingPage.jsx";
+import PaymentPage from "./pages/PaymentPage.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
 
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-     <BrowserRouter>
-    <Routes>
-      <Route path="/" Component={App}>
-        <Route path="" Component={HomePage} />
-        <Route path="products/:id" Component={ProductDetailPage} />
-        <Route path="login" Component={LoginPage} />
-        <Route path="cart" Component={CartPage} />
-      </Route>
-    </Routes>
-  </BrowserRouter>
-  </Provider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" Component={App}>
+          <Route path="" Component={HomePage} />
+          <Route path="products/:id" Component={ProductDetailPage} />
+          <Route path="login" Component={LoginPage} />
+          <Route path="cart" Component={CartPage} />
+          <Route path="" Component={PrivateRoute}>
+            <Route path="shipping" Component={ShippingPage} />
+            <Route path="payment" Component={PaymentPage} />
+          </Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  </Provider>,
 );
