@@ -13,6 +13,8 @@ import store from "./store.js";
 import ShippingPage from "./pages/ShippingPage.jsx";
 import PaymentPage from "./pages/PaymentPage.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
+import PlaceOrderPage from "./pages/PlaceOrderPage.jsx";
+import OrderDetailPage from "./pages/OrderDetailPage.jsx";
 
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
@@ -26,6 +28,8 @@ createRoot(document.getElementById("root")).render(
           <Route path="" Component={PrivateRoute}>
             <Route path="shipping" Component={ShippingPage} />
             <Route path="payment" Component={PaymentPage} />
+            <Route path="placeorder" Component={PlaceOrderPage} />
+            <Route path="order/:id" Component={OrderDetailPage} />
           </Route>
         </Route>
       </Routes>

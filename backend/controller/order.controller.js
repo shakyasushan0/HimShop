@@ -1,4 +1,5 @@
 import Order from "../model/Order.js";
+import crypto from "crypto";
 
 const addOrder = async (req, res) => {
   const {
@@ -31,7 +32,10 @@ const getOrders = async (req, res) => {
 
 const getOrderById = async (req, res) => {
   const { id } = req.params;
-  const order = await Order.findById(id);
+  const order = await Order.findById(id).populate(
+    "user",
+    "fullname email isAdmin",
+  );
   if (!order) return res.status(404).send({ error: "Order not found!" });
   res.send(order);
 };
@@ -61,6 +65,32 @@ const deliverOrder = async (req, res) => {
   res.send({ message: "Order delivered successfully" });
 };
 
+const getEsewaPaymentDetails = async (req, res) => {
+  const { id } = req.params;
+  const order = await Order.findById(id);
+  if (!order) return res.status(404).send({ message: "Order not found" });
+  const tran_uuid = Date.now() + "_" + order._id;
+  const message = `total_amount=${order.totalPrice},transaction_uuid=${tran_uuid},product_code=EPAYTEST`;
+  const signature = crypto
+    .createHmac("sha256", "8gBm/:&EnhH.1/q")
+    .update(message)
+    .digest("base64");
+  const paymentDetail = {
+    amount: order.itemPrice,
+    failure_url: "http://localhost:5173/order/" + id,
+    product_delivery_charge: String(order.shippingPrice),
+    product_service_charge: "0",
+    product_code: "EPAYTEST",
+    signature: signature,
+    signed_field_names: "total_amount,transaction_uuid,product_code",
+    success_url: "http://localhost:3000/api/orders/confirmpayment",
+    tax_amount: String(order.taxPrice),
+    total_amount: String(order.totalPrice),
+    transaction_uuid: tran_uuid,
+  };
+  res.send(paymentDetail);
+};
+
 export {
   addOrder,
   getOrders,
@@ -68,4 +98,5 @@ export {
   getMyOrders,
   payOrder,
   deliverOrder,
+  getEsewaPaymentDetails,
 };

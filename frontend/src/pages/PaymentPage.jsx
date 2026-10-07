@@ -4,6 +4,7 @@ import { Col, Form, Button } from "react-bootstrap";
 import CheckoutSteps from "../components/CheckoutStep";
 import { savePaymentMethod } from "../slices/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 function PaymentPage() {
   const { paymentMethod: savedPaymentMethod } = useSelector(
     (state) => state.cart,
@@ -11,11 +12,13 @@ function PaymentPage() {
   const [paymentMethod, setPaymentMethod] = useState(
     savedPaymentMethod || "cod",
   );
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const submitHandler = (e) => {
     e.preventDefault();
     console.log(paymentMethod);
     dispatch(savePaymentMethod(paymentMethod));
+    navigate("/placeorder");
   };
 
   return (

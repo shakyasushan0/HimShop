@@ -2,6 +2,7 @@ import express from "express";
 import {
   addOrder,
   deliverOrder,
+  getEsewaPaymentDetails,
   getMyOrders,
   getOrderById,
   getOrders,
@@ -15,6 +16,7 @@ router.get("/", checkAuth, checkAdmin, getOrders);
 router.post("/", checkAuth, addOrder);
 router.get("/mine", checkAuth, getMyOrders);
 router.get("/:id", checkAuth, getOrderById);
+router.get("/:id/getpaymentdetails", getEsewaPaymentDetails);
 router.put("/:id/pay", checkAuth, checkAdmin, payOrder);
 router.put("/:id/deliver", checkAuth, checkAdmin, deliverOrder);
 
